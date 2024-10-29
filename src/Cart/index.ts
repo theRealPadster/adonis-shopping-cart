@@ -1,10 +1,10 @@
 import { CartContract } from '@ioc:Adonis/Addons/Cart'
 import { CartItem } from '@ioc:Adonis/Addons/Cart'
-import createHmac from 'crypto'
+import { createHash } from 'crypto'
 
 /**
  * Cart Class
- * 
+ *
  * @class Cart
  * @constructor
  */
@@ -31,8 +31,8 @@ export default class Cart implements CartContract {
 
   /**
    * Format Curency
-   * @param number 
-   * @returns 
+   * @param number
+   * @returns
    */
   protected formatCurrency (number:number):string {
     return new Intl.NumberFormat(this.cartConfig.format.locale, this.cartConfig.format.options).format(number)
@@ -40,7 +40,7 @@ export default class Cart implements CartContract {
 
   /**
    * Get Cart Total Quantity
-   * @returns 
+   * @returns
    */
   public getTotalQuantity ():number{
     const items = this.getContent()
@@ -54,7 +54,7 @@ export default class Cart implements CartContract {
 
   /**
    * Get Cart Sub total as number less VAT
-   * @returns 
+   * @returns
    */
   public getSubtotalNumber ():number{
     const items = this.getContent()
@@ -78,7 +78,7 @@ export default class Cart implements CartContract {
 
   /**
    * Get Cart Sub total as formated curency string less VAT
-   * @returns 
+   * @returns
    */
   public getSubtotal ():string{
     return this.formatCurrency(this.getSubtotalNumber())
@@ -86,7 +86,7 @@ export default class Cart implements CartContract {
 
   /**
    * Get VAT as number
-   * @returns 
+   * @returns
    */
   public getVatNumber ():number{
     const items = this.getContent()
@@ -110,7 +110,7 @@ export default class Cart implements CartContract {
 
   /**
    * Get VAT as formated currency
-   * @returns 
+   * @returns
    */
   public getVat ():string{
     return this.formatCurrency(this.getVatNumber())
@@ -118,7 +118,7 @@ export default class Cart implements CartContract {
 
   /**
    * Set Cart shipping amount as number
-   * @param shipping 
+   * @param shipping
    */
   public setShippingAmmount (shipping:number){
     this.session.put('cart.shippingAmount',shipping)
@@ -127,8 +127,8 @@ export default class Cart implements CartContract {
   /**
    * Get Cart Shipping Amount as number
    * Subtotal + VAT
-   * 
-   * @returns 
+   *
+   * @returns
    */
   public getShipingNumber ():number{
     return this.session.get('cart.shippingAmount')
@@ -137,8 +137,8 @@ export default class Cart implements CartContract {
   /**
    * Get Cart Shipping Amount as formated currency
    * Subtotal + VAT
-   * 
-   * @returns 
+   *
+   * @returns
    */
   public getShiping ():string{
     return this.formatCurrency(this.getShipingNumber())
@@ -147,8 +147,8 @@ export default class Cart implements CartContract {
   /**
    * Get Cart Total as number
    * Subtotal + VAT
-   * 
-   * @returns 
+   *
+   * @returns
    */
   public getTotalNumber ():number{
     return this.getSubtotalNumber() + this.getVatNumber() + this.getShipingNumber()
@@ -157,8 +157,8 @@ export default class Cart implements CartContract {
   /**
    * Get Cart Total as formated currency
    * Subtotal + VAT
-   * 
-   * @returns 
+   *
+   * @returns
    */
   public getTotal ():string{
     return this.formatCurrency(this.getTotalNumber())
@@ -171,7 +171,7 @@ export default class Cart implements CartContract {
    * @returns
    */
   public getRowId (attributes: object): string {
-    return createHmac.createHash('sha256').update(JSON.stringify(attributes)).digest('base64')
+    return createHash('sha256').update(JSON.stringify(attributes)).digest('base64')
   }
 
   /**
@@ -208,7 +208,7 @@ export default class Cart implements CartContract {
 
   /**
    * Remove Cart items by rowId
-   * @param rowId 
+   * @param rowId
    */
   public removeByRowId (rowId:string){
     this.session.forget(`cart.items.${rowId}`)
@@ -254,9 +254,9 @@ export default class Cart implements CartContract {
 
   /**
    * Get Cart Content
-   * 
+   *
    * Cart items are sorted by the rowId
-   * 
+   *
    * @returns
    */
   public getContent (): object {
@@ -291,8 +291,8 @@ export default class Cart implements CartContract {
 
   /**
    * Build Item Object
-   * @param data 
-   * @returns 
+   * @param data
+   * @returns
    */
   protected buildItem (data:CartItem) {
     return {
